@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<body>
+		<div>
+			<input type="button" id="btnId">
+		</div>
+		<table>
+			<thead>
+				<th>文件名</th>
+				<th>大小</th>
+				<th>进度</th>
+				<th>备注</th>
+			</thead>
+			<tbody id="fileList">
+				
+			</tbody>
+		</table>
+		<script src="js/small-file-selector.js"></script>
+		<script src="js/jquery-1.11.1.js"></script>
+		<script>
+			var $tbody=$('#fileList');
+			var addElement = function(resourceFile) {
+				var $tr = $("<tr></tr>");
+				$("<td></td>").html(resourceFile.name).appendTo($tr);
+				$("<td></td>").html(resourceFile.sizeText).appendTo($tr);
+				//片段、进度
+				var $partNumber = $("<p>当前进度:</p>");
+				var $speed = $("<p>当前速度:</p>")
+				//进度条
+				var $progressBar = $("<div></div>").attr("class", "layui-progress-bar layui-bg-gree").css("width", "0%");
+				var $progress = $("<div></div>").attr("class", "layui-progress layui-progress-big").append($progressBar);
+				//url
+				var $comleteUrl = $("<a target='_blank'></a>");
+				$("<td></td>").append($partNumber).append($speed).append($progress).append($comleteUrl).appendTo($tr);
+
+				var $del = $("<input type='button' value='X'>");
+				$del.on("click", function() {
+					$(this).parent().parent().remove();
+					selector.deleteFile(resourceFile.uuid);
+				});
+				$("<td></td>").append($del).appendTo($tr);
+				$tr.appendTo($tbody);
+			}
+			var selector = new LittleFileSelector({
+				el: "btnId",
+				addElement: addElement
+			});
+		</script>
+	</body>
+</html>
