@@ -1,7 +1,6 @@
 //TODO 1.sha256:https://www.cnblogs.com/loveyunk/p/7513902.html
 //TODO 2.完善渲染表格
-;
-(function(global) {
+;(function(global) {
 	"use strict";
 	var ResourceFile = function(file) {
 		this.file = file;
@@ -58,7 +57,7 @@
 		return this.isUploaded;
 	}
 	var defaultOption = {
-		el: "btnId",
+		id: "btnId",
 		initTable: undefined,
 		addElement: undefined
 	}
@@ -66,29 +65,29 @@
 	function LittleFileSelector(options) {
 		this.options = Object.assign(defaultOption, options);
 		this.files = new Map();
-		var btn = document.getElementById(this.options.el);
+		var btn = document.getElementById(this.options.id);
 		var self = this;
 		(function init() {
 			var filetor = document.createElement("input");
 			filetor.setAttribute("type", "file");
 			filetor.setAttribute("style", "display:none");
 			filetor.onchange = function() {
-				addFile(this.files[0]);
+				var file=this.files[0];
+				if (file) {
+					var resourceFile = new ResourceFile(file);
+					self.files.set(resourceFile.uuid, resourceFile);
+					if (self.options.addElement && typeof self.options.addElement === "function") {
+						self.options.addElement(resourceFile);
+					}
+					
+				}
+				filetor.value="";
 			}
-			btn.onclick=function(){
-				console.log();
+			btn.onclick = function() {
 				filetor.click();
 			}
 			document.body.appendChild(filetor);
-			/* if (self.options.initTable && typeof self.options.initTable === "function") {
-				self.options.initTable(container);
-			} */
 		})();
-		var addFile = function(file) {
-			var resourceFile = new ResourceFile(file);
-			self.files.set(resourceFile.uuid, resourceFile);
-			self.options.addElement(resourceFile);
-		};
 		return this;
 	}
 	LittleFileSelector.prototype.getFiles = function() {

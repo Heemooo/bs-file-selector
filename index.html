@@ -3,24 +3,30 @@
 	<head>
 		<meta charset="utf-8" />
 		<title></title>
+		<link href="./js/layui/css/layui.css" rel="stylesheet"/>
 	</head>
 	<body>
-		<div>
-			<input type="button" id="btnId">
+		<div class="layui-container">
+			<div>
+				<button type="button" class="layui-btn" id="btnId">
+				  <i class="layui-icon">&#xe67c;</i>上传文件
+				</button>
+			</div>
+			<table class="layui-table">
+				<thead>
+					<th>文件名</th>
+					<th>大小</th>
+					<th>进度</th>
+					<th>备注</th>
+				</thead>
+				<tbody id="fileList">
+					
+				</tbody>
+			</table>
 		</div>
-		<table>
-			<thead>
-				<th>文件名</th>
-				<th>大小</th>
-				<th>进度</th>
-				<th>备注</th>
-			</thead>
-			<tbody id="fileList">
-				
-			</tbody>
-		</table>
-		<script src="js/small-file-selector.js"></script>
-		<script src="js/jquery-1.11.1.js"></script>
+		<script src="./js/layui/layui.js"></script>
+		<script src="./js/little-file-selector.js"></script>
+		<script src="./js/jquery-1.11.1.js"></script>
 		<script>
 			var $tbody=$('#fileList');
 			var addElement = function(resourceFile) {
@@ -44,9 +50,10 @@
 				});
 				$("<td></td>").append($del).appendTo($tr);
 				$tr.appendTo($tbody);
+				
 			}
 			var selector = new LittleFileSelector({
-				el: "btnId",
+				id: "btnId",
 				addElement: addElement
 			});
 		</script>
