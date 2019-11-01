@@ -1,5 +1,3 @@
-//TODO 1.sha256:https://www.cnblogs.com/loveyunk/p/7513902.html
-//TODO 2.完善渲染表格
 ;(function(global) {
 	"use strict";
 	var ResourceFile = function(file) {
@@ -62,7 +60,7 @@
 		addElement: undefined
 	}
 
-	function LittleFileSelector(options) {
+	function FileSelector(options) {
 		this.options = Object.assign(defaultOption, options);
 		this.files = new Map();
 		var btn = document.getElementById(this.options.id);
@@ -90,22 +88,22 @@
 		})();
 		return this;
 	}
-	LittleFileSelector.prototype.getFiles = function() {
+	FileSelector.prototype.getFiles = function() {
 		return this.files;
 	}
-	LittleFileSelector.prototype.deleteFile = function(uuid) {
+	FileSelector.prototype.deleteFile = function(uuid) {
 		return this.files.delete(uuid);
 	}
 	if (typeof module !== 'undefined' && module.exports) {
 		//兼容CommonJs规范 
-		module.exports = LittleFileSelector;
+		module.exports = FileSelector;
 	} else if (typeof define === 'function') {
 		//兼容AMD/CMD规范
 		define(function() {
-			return LittleFileSelector
+			return FileSelector
 		})
 	} else {
 		//注册全局变量，兼容直接使用script标签引入插件
-		global.LittleFileSelector = LittleFileSelector;
+		global.FileSelector = FileSelector;
 	}
 })(this);

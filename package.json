@@ -1,0 +1,14 @@
+{
+  "name": "bs-file-selector",
+  "version": "0.0.1",
+  "description": "A lightweight, non-dependent browser file selector,一个轻量无依赖的浏览器文件选择器",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bs-file-selector"
+  ],
+  "author": "heemooo",
+  "license": "MIT"
+}
