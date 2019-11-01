@@ -1,6 +1,6 @@
 {
   "name": "bs-file-selector",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A lightweight, non-dependent browser file selector,一个轻量无依赖的浏览器文件选择器",
   "main": "bs-file-selector.js",
   "scripts": {
