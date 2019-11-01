@@ -1,14 +1,24 @@
 {
   "name": "bs-file-selector",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A lightweight, non-dependent browser file selector,一个轻量无依赖的浏览器文件选择器",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Heemooo/bs-file-selector.git"
+  },
   "keywords": [
     "bs-file-selector"
   ],
   "author": "heemooo",
-  "license": "MIT"
+  "license": "MIT",
+  "files":[
+		"bs-file-selector.js",
+		"package.json",
+		"LICENSE",
+		"README.md"
+	]
 }
