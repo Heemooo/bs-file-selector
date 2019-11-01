@@ -20,9 +20,5 @@
     "package.json",
     "LICENSE",
     "README.md"
-  ],
-  "dependencies": {
-    "amazeui": "^2.7.2",
-    "jquery": "^3.4.1"
-  }
+  ]
 }
