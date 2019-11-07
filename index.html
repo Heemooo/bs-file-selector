@@ -27,14 +27,43 @@
 		<button type="button" class="layui-btn" id="startUpload">
 			<i class="layui-icon">&#xe67c;</i>开始上传
 		</button>
-		<script src="js/lib/jquery-1.11.1.js"></script>
-		<script src="js/lib/esdk-obs-browserjs-without-polyfill-3.19.7.min.js"></script>
-		<script src="js/lib/bs-file-selector.js"></script>
+		<script src="bs-file-selector.js"></script>
 		<script>
-			//上传完成之后使用，存放多个附件信息
-			var attachmentArr = [];
 			$(document).ready(function() {
-				var $tbody = $('#fileList');
+				var $tbody = $('#fileList');1
+				var selector = new FileSelector({
+					id: "btnId",
+					uploadFileType: ".zip",
+					uploadFileNumber: 1,
+					uploadFileSize: 50 * 1024 * 1024,
+					showMsg: function(msg) {
+						alert(msg);
+					},
+					addElement: function(resourceFile) {
+						var $tr = $("<tr></tr>");
+						$("<td></td>").html(resourceFile.name).appendTo($tr);
+						$("<td></td>").html(resourceFile.sizeText).appendTo($tr);
+						//片段、进度
+						var $partNumber = $("<p>当前进度:</p>");
+						var $speed = $("<p>当前速度:</p>")
+						//进度条
+						var $progressBar = $("<div></div>").attr("class", "layui-progress-bar layui-bg-gree").css("width", "0%");
+						var $progress = $("<div></div>").attr("class", "layui-progress layui-progress-big").append($progressBar);
+						//url
+						var $comleteUrl = $("<a target='_blank'></a>");
+						$("<td></td>").append($partNumber).append($speed).append($progress).append($comleteUrl).appendTo($tr);
+
+						var $del = $("<input class='layui-btn layui-btn-xs layui-btn-normal' type='button' value='X'>");
+						$del.on("click", function() {
+							$(this).parent().parent().remove();
+							selector.deleteFile(resourceFile.uuid);
+						});
+						$("<td></td>").append($del).appendTo($tr);
+						$tr.appendTo($tbody);
+						var fileItem = new FileItem($partNumber, $speed, $progressBar, $comleteUrl, resourceFile.size);
+						resourceFile.bindUI(fileItem);
+					}
+				});
 				var FileItem = function($partNumber, $speed, $progressBar, $comleteUrl, fileSize) {
 					this.$partNumber = $partNumber;
 					this.$speed = $speed;
@@ -64,36 +93,6 @@
 				FileItem.prototype.setCompleteInfo = function(info) {
 					if (this.$partNumber) this.$partNumber.html("当前进度:" + info);
 				}
-				var selector = new FileSelector({
-					id: "btnId",
-					uploadFileType: ".zip",
-					uploadFileNumber: 1,
-					uploadFIleSize: "50mb",
-					addElement: function(resourceFile) {
-						var $tr = $("<tr></tr>");
-						$("<td></td>").html(resourceFile.name).appendTo($tr);
-						$("<td></td>").html(resourceFile.sizeText).appendTo($tr);
-						//片段、进度
-						var $partNumber = $("<p>当前进度:</p>");
-						var $speed = $("<p>当前速度:</p>")
-						//进度条
-						var $progressBar = $("<div></div>").attr("class", "layui-progress-bar layui-bg-gree").css("width", "0%");
-						var $progress = $("<div></div>").attr("class", "layui-progress layui-progress-big").append($progressBar);
-						//url
-						var $comleteUrl = $("<a target='_blank'></a>");
-						$("<td></td>").append($partNumber).append($speed).append($progress).append($comleteUrl).appendTo($tr);
-
-						var $del = $("<input class='layui-btn layui-btn-xs layui-btn-normal' type='button' value='X'>");
-						$del.on("click", function() {
-							$(this).parent().parent().remove();
-							selector.deleteFile(resourceFile.uuid);
-						});
-						$("<td></td>").append($del).appendTo($tr);
-						$tr.appendTo($tbody);
-						var fileItem=new FileItem($partNumber, $speed, $progressBar, $comleteUrl, resourceFile.size);
-						resourceFile.bindUI(fileItem);
-					}
-				});
 				$("#startUpload").click(function() {
 					var files = selector.getFiles();
 					if (files) {

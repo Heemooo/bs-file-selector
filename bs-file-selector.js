@@ -1,4 +1,5 @@
-;(function(global) {
+;
+(function(global) {
 	"use strict";
 	var ResourceFile = function(file) {
 		this.file = file;
@@ -8,8 +9,8 @@
 				return "." + fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length);
 			}
 		})(this.name);
-		this.type = (function(fileName){
-			if(fileName){
+		this.type = (function(fileName) {
+			if (fileName) {
 				return fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length);
 			}
 		})(this.name);
@@ -55,8 +56,8 @@
 		this.isUploaded = false;
 		this.ui = undefined;
 	}
-	ResourceFile.prototype.bindUI=function(obj){
-		if(obj)this.ui=obj;
+	ResourceFile.prototype.bindUI = function(obj) {
+		if (obj) this.ui = obj;
 	}
 	ResourceFile.prototype.uploaded = function(uploaded) {
 		if (uploaded) this.isUploaded = uploaded;
@@ -66,9 +67,9 @@
 		id: "btnId",
 		initTable: undefined,
 		addElement: undefined,
-		uploadFileType:undefined,
-		uploadFileNumber:undefined,
-		uploadFIleSize:undefined
+		uploadFileType: undefined,
+		uploadFileNumber: undefined,
+		uploadFIleSize: undefined
 	}
 
 	function FileSelector(options) {
@@ -80,17 +81,39 @@
 			var filetor = document.createElement("input");
 			filetor.setAttribute("type", "file");
 			filetor.setAttribute("style", "display:none");
+			if(self.options.uploadFileType)filetor.setAttribute("accept",self.options.uploadFileType);
 			filetor.onchange = function() {
-				var file=this.files[0];
+				var file = this.files[0];
 				if (file) {
 					var resourceFile = new ResourceFile(file);
-					self.files.set(resourceFile.uuid, resourceFile);
-					if (self.options.addElement && typeof self.options.addElement === "function") {
-						self.options.addElement(resourceFile);
+					var allowPut = true;
+					var tipsInfo = "";
+					if (resourceFile.size > self.options.uploadFileSize) {
+						allowPut = false;
+						tipsInfo = "上传限制：文件大小超出限制";
 					}
-					
+					if (self.files.size >= self.options.uploadFileNumber) {
+						allowPut = false;
+						tipsInfo = "上传限制：文件数量超出限制";
+					}
+					if (self.options.uploadFileType.indexOf(resourceFile.suffix) < 0) {
+						allowPut = false;
+						tipsInfo = "上传限制：文件格式超出限制";
+					}
+					if (allowPut) {
+						self.files.set(resourceFile.uuid, resourceFile);
+						if (self.options.addElement && typeof self.options.addElement === "function") {
+							self.options.addElement(resourceFile);
+						}
+					} else {
+						if (self.options.showMsg && typeof self.options.showMsg === "function") {
+							self.options.showMsg(tipsInfo);
+						} else {
+							alert(tipsInfo);
+						}
+					}
 				}
-				filetor.value="";
+				filetor.value = "";
 			}
 			btn.onclick = function() {
 				filetor.click();
