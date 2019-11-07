@@ -8,7 +8,7 @@ A lightweight, non-dependent browser file selector,一个轻量无依赖的浏�
 ## 项目的使用
 ### 简单demo
 下载bs-file-selector，并在页面中引入,简易demo如下
-```
+```html
 <!DOCTYPE html>
 <html>
 	<head>
@@ -43,7 +43,7 @@ A lightweight, non-dependent browser file selector,一个轻量无依赖的浏�
 ```
 ### 自定义UI
 在`addElement`回调方法的实现中你可以绑定自己的ui实现，调用`resourceFile.bindUI(ui);`绑定文件和UI，简单实现如下：
-```
+```html
 //TODO 为了方便，需要引入JQuery和Layui，也可以直接用原生实现ui
 <!DOCTYPE html>
 <html>
