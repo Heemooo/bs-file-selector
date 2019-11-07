@@ -24,6 +24,9 @@ A lightweight, non-dependent browser file selector,一个轻量无依赖的浏�
 		  	uploadFileType: ".zip",//文件类型
 		  	uploadFileNumber: 1,//文件数量
 		  	uploadFIleSize: "50mb",//文件大小
+			showMsg: function(msg) {//不传入该回调方法默认使用alert
+				alert(msg);
+			},
 		  	addElement: function(resourceFile) {
 				//resourceFile文件对象
 				console.log(resourceFile);
@@ -42,65 +45,115 @@ A lightweight, non-dependent browser file selector,一个轻量无依赖的浏�
 在`addElement`回调方法的实现中你可以绑定自己的ui实现，调用`resourceFile.bindUI(ui);`绑定文件和UI，简单实现如下：
 ```
 //TODO 为了方便，需要引入JQuery和Layui，也可以直接用原生实现ui
-var FileItem = function($partNumber, $speed, $progressBar, $comleteUrl, fileSize) {
-	this.$partNumber = $partNumber;
-	this.$speed = $speed;
-	this.$progressBar = $progressBar;
-	this.$comleteUrl = $comleteUrl;
-	this.uploadedSize = 0;
-	this.fileSize = fileSize;
-}
-FileItem.prototype.updateProgress = function(partNumber, speed, value) {
-	if (this.$partNumber) this.$partNumber.html("当前进度:正在上传分片" + partNumber);
-	if (this.$speed) this.$speed.html("当前速度:" + speed + "/S");
-	var percent = (this.uploadedSize + value) * 100.0 / this.fileSize;
-	if (this.$progressBar) this.$progressBar.attr("style", "width:" + percent + "%");
-}
-FileItem.prototype.updateUrl = function(url) {
-	if (this.$partNumber) this.$partNumber.html("当前进度:上传成功");
-	if (this.$comleteUrl) {
-		this.$comleteUrl.attr("href", url);
-		this.$comleteUrl.html("Link:" + url);
-	}
-};
-FileItem.prototype.setUploadedSize = function(value) {
-	if (this.uploadedSize) this.uploadedSize += value;
-	else this.uploadedSize = value;
-	return this.uploadedSize;
-}
-FileItem.prototype.setCompleteInfo = function(info) {
-	if (this.$partNumber) this.$partNumber.html("当前进度:" + info);
-}
-var selector = new FileSelector({
-	id: "btnId",
-	uploadFileType: ".zip",
-	uploadFileNumber: 1,
-	uploadFIleSize: "50mb",
-	addElement: function(resourceFile) {
-		var $tr = $("<tr></tr>");
-		$("<td></td>").html(resourceFile.name).appendTo($tr);
-		$("<td></td>").html(resourceFile.sizeText).appendTo($tr);
-		//片段、进度
-		var $partNumber = $("<p>当前进度:</p>");
-		var $speed = $("<p>当前速度:</p>")
-		//进度条
-		var $progressBar = $("<div></div>").attr("class", "layui-progress-bar layui-bg-gree").css("width", "0%");
-		var $progress = $("<div></div>").attr("class", "layui-progress layui-progress-big").append($progressBar);
-		//url
-		var $comleteUrl = $("<a target='_blank'></a>");
-		$("<td></td>").append($partNumber).append($speed).append($progress).append($comleteUrl).appendTo($tr);
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="js/lib/layui/css/layui.css" />
+	</head>
+	<body>
+		<div class="layui-container" style="margin-top: 50px;">
+			<div>
+				<button type="button" class="layui-btn" id="btnId">
+					<i class="layui-icon">&#xe67c;</i>上传文件
+				</button>
+			</div>
+			<table class="layui-table">
+				<thead>
+					<th>文件名</th>
+					<th>大小</th>
+					<th>进度</th>
+					<th>备注</th>
+				</thead>
+				<tbody id="fileList">
 
-		var $del = $("<input class='layui-btn layui-btn-xs layui-btn-normal' type='button' value='X'>");
-		$del.on("click", function() {
-			$(this).parent().parent().remove();
-			selector.deleteFile(resourceFile.uuid);
-		});
-		$("<td></td>").append($del).appendTo($tr);
-		$tr.appendTo($tbody);
-		var fileItem=new FileItem($partNumber, $speed, $progressBar, $comleteUrl, resourceFile.size);
-		resourceFile.bindUI(fileItem);
-	}
-});
+				</tbody>
+			</table>
+		</div>
+		<button type="button" class="layui-btn" id="startUpload">
+			<i class="layui-icon">&#xe67c;</i>开始上传
+		</button>
+		<script src="bs-file-selector.js"></script>
+		<script>
+			$(document).ready(function() {
+				var $tbody = $('#fileList');1
+				var selector = new FileSelector({
+					id: "btnId",
+					uploadFileType: ".zip",
+					uploadFileNumber: 1,
+					uploadFileSize: 50 * 1024 * 1024,
+					showMsg: function(msg) {
+						alert(msg);
+					},
+					addElement: function(resourceFile) {
+						var $tr = $("<tr></tr>");
+						$("<td></td>").html(resourceFile.name).appendTo($tr);
+						$("<td></td>").html(resourceFile.sizeText).appendTo($tr);
+						//片段、进度
+						var $partNumber = $("<p>当前进度:</p>");
+						var $speed = $("<p>当前速度:</p>")
+						//进度条
+						var $progressBar = $("<div></div>").attr("class", "layui-progress-bar layui-bg-gree").css("width", "0%");
+						var $progress = $("<div></div>").attr("class", "layui-progress layui-progress-big").append($progressBar);
+						//url
+						var $comleteUrl = $("<a target='_blank'></a>");
+						$("<td></td>").append($partNumber).append($speed).append($progress).append($comleteUrl).appendTo($tr);
+
+						var $del = $("<input class='layui-btn layui-btn-xs layui-btn-normal' type='button' value='X'>");
+						$del.on("click", function() {
+							$(this).parent().parent().remove();
+							selector.deleteFile(resourceFile.uuid);
+						});
+						$("<td></td>").append($del).appendTo($tr);
+						$tr.appendTo($tbody);
+						var fileItem = new FileItem($partNumber, $speed, $progressBar, $comleteUrl, resourceFile.size);
+						resourceFile.bindUI(fileItem);
+					}
+				});
+				var FileItem = function($partNumber, $speed, $progressBar, $comleteUrl, fileSize) {
+					this.$partNumber = $partNumber;
+					this.$speed = $speed;
+					this.$progressBar = $progressBar;
+					this.$comleteUrl = $comleteUrl;
+					this.uploadedSize = 0;
+					this.fileSize = fileSize;
+				}
+				FileItem.prototype.updateProgress = function(partNumber, speed, value) {
+					if (this.$partNumber) this.$partNumber.html("当前进度:正在上传分片" + partNumber);
+					if (this.$speed) this.$speed.html("当前速度:" + speed + "/S");
+					var percent = (this.uploadedSize + value) * 100.0 / this.fileSize;
+					if (this.$progressBar) this.$progressBar.attr("style", "width:" + percent + "%");
+				}
+				FileItem.prototype.updateUrl = function(url) {
+					if (this.$partNumber) this.$partNumber.html("当前进度:上传成功");
+					if (this.$comleteUrl) {
+						this.$comleteUrl.attr("href", url);
+						this.$comleteUrl.html("Link:" + url);
+					}
+				};
+				FileItem.prototype.setUploadedSize = function(value) {
+					if (this.uploadedSize) this.uploadedSize += value;
+					else this.uploadedSize = value;
+					return this.uploadedSize;
+				}
+				FileItem.prototype.setCompleteInfo = function(info) {
+					if (this.$partNumber) this.$partNumber.html("当前进度:" + info);
+				}
+				$("#startUpload").click(function() {
+					var files = selector.getFiles();
+					if (files) {
+						files.forEach(function(value, key) {
+							if (!value.isUploaded) {
+								//TODO 开始上传
+							}
+						});
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
 ```
 ### 获取文件
 调用`selector.getFiles()`可以获取文件列表
