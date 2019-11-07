@@ -7,7 +7,12 @@
 			if (fileName) {
 				return "." + fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length);
 			}
-		})(file.name);
+		})(this.name);
+		this.type = (function(fileName){
+			if(fileName){
+				return fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length);
+			}
+		})(this.name);
 		this.uuid = (function(len, radix) {
 			var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 			var uuid = [],
@@ -48,7 +53,10 @@
 			return fileSizeMsg;
 		})(file.size);
 		this.isUploaded = false;
-		this.progress = undefined;
+		this.ui = undefined;
+	}
+	ResourceFile.prototype.bindUI=function(obj){
+		if(obj)this.ui=obj;
 	}
 	ResourceFile.prototype.uploaded = function(uploaded) {
 		if (uploaded) this.isUploaded = uploaded;
@@ -57,7 +65,10 @@
 	var defaultOption = {
 		id: "btnId",
 		initTable: undefined,
-		addElement: undefined
+		addElement: undefined,
+		uploadFileType:undefined,
+		uploadFileNumber:undefined,
+		uploadFIleSize:undefined
 	}
 
 	function FileSelector(options) {

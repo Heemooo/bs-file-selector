@@ -4,7 +4,7 @@
   "description": "A lightweight, non-dependent browser file selector,一个轻量无依赖的浏览器文件选择器",
   "main": "bs-file-selector.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run"
   },
   "repository": {
     "type": "git",

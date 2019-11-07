@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<input type="button" value="选择文件" id="btnId" />
+	<script src="bs-file-selector.js"></script>
+	<script>
+		window.onload = function(){
+		  var selector = new FileSelector({
+		  	id: "btnId",
+		  	uploadFileType: ".zip",
+		  	uploadFileNumber: 1,
+		  	uploadFIleSize: "50mb",
+		  	addElement: function(resourceFile) {
+				console.log(resourceFile);
+		  		var ui={};
+				//ui代码
+		  		resourceFile.bindUI(ui);
+		  	}
+		  });
+		}
+	</script>
+	<body>
+	</body>
+</html>
