@@ -23,7 +23,7 @@ A lightweight, non-dependent browser file selector,一个轻量无依赖的浏�
 		  	id: "btnId",//文件选择按钮id,id为btnId可不设置此项
 		  	uploadFileType: ".zip",//文件类型
 		  	uploadFileNumber: 1,//文件数量
-		  	uploadFIleSize: "50mb",//文件大小
+		  	uploadFIleSize: "50*1024*1024",//文件大小
 			showMsg: function(msg) {//不传入该回调方法默认使用alert
 				alert(msg);
 			},
